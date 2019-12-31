@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Student;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
@@ -36,6 +37,9 @@ class UserController extends Controller
                 'name' => 'required',
                 'email' => 'required|email',
                 'password' => 'required',
+                'year'=>'required',
+                'groupeid'=>'required',
+                'typeCompte'=> 'required',
                 'c_password' => 'required|same:password',
             ]);
             if ($validator->fails()) {
@@ -43,10 +47,16 @@ class UserController extends Controller
             }
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
+            $student = Student::create([
+            'annee'=> $input['year'],
+            'groupeid' => $input['groupeid']
+            ]);
+            $studenId = $student->id;
+            $input['idCompte'] = $studenId;
             $user = User::create($input);
             $success['token'] =  $user->createToken('MyApp')-> accessToken;
             $success['name'] =  $user->name;
-    return response()->json(['success'=>$success], $this-> successStatus);
+            return response()->json(['success'=>$success], $this-> successStatus);
         }
     /**
          * details api
