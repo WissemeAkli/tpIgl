@@ -3,7 +3,7 @@ services:
   app:
     build: .
     image: tpigl:0.1
-    container_name: backend_container
+    container_name: app
     restart: unless-stopped
     tty: true
     working_dir: /var/www
@@ -26,10 +26,10 @@ services:
     volumes:
       - ./:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
-    links:
-      - app
     depends_on:
       - "app"
+    networks:
+      - app-network
 
   redis:
     image: redis:alpine

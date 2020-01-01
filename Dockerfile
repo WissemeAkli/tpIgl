@@ -35,7 +35,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY . /var/www
 
 RUN chown -R www-data:www-data /var/www
-RUN chmod -R 775 /var/www/storage
+RUN chmod -R 777 /var/www/storage
+RUN chmod -R 777 storage/
 RUN chmod +x final.sh
 
 # Expose port 9000 and start php-fpm server
