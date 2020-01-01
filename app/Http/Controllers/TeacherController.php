@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Teacher;
+use App\Note;
+use App\GroupeStudent;
 use App\Groupe;
+use App\Student;
+use App\User;
 use Log ;
 use App\Module;
 
@@ -31,4 +35,40 @@ class TeacherController extends Controller
         }
         return response()->json(["succes"=>$modules, "user"=>$user]);
     }
+    public function groupe(Request $request){
+        $user = Auth::user();
+        if($user->typeCompte !="T"){
+             return response()->json(['error'=>"You are A student you can't access teacher space"], 401);
+        }
+        $moduleId = $request->module;
+        $groupeId = $request->groupe;
+        $studentsInGroup = Student::where('groupeId', $groupeId)->get();
+        $students = [];
+        foreach($studentsInGroup as $student){
+            $user = User::where('idCompte' , $student->id)->where('typeCompte' , 'S')->first();
+            $notes = Note::where('module_id', $moduleId)->where('etudiant_id' , $student->id)->get();
+            $studentGroupe =new GroupeStudent($user->name , 0.0 , 0.0 , 0.0);
+            if(!empty($notes)) {
+                $CI = 0.0 ;
+                $CF = 0.0 ;
+                $CC = 0.0 ;
+                foreach($notes as $note){
+                    if($note->type =='CC'){
+                        $CC = $note->valeur ;
+                    }else if($note->type=='CF'){
+                        $CF = $note->valeur;
+                    }else{
+                        $CI = $note->valeur;
+                    }
+                }
+                $studentGroupe->CI = $CI;
+                $studentGroupe->CC = $CC;
+                $studentGroupe->CF = $CF;
+            }
+
+            $students[$student->id] =$studentGroupe ;
+        }
+        return response()->json(["student"=>$students]);
+    }
+
 }
