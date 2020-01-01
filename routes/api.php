@@ -17,4 +17,5 @@ Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');Route::group(['middleware' => 'auth:api'], function(){
     Route::get('teacher', 'TeacherController@details');
     Route::post('teacher/groupe', 'TeacherController@groupe');
+    Route::post('teacher/groupe/addNote', 'TeacherController@addNote');
 });

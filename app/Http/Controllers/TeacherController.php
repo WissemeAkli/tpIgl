@@ -70,5 +70,24 @@ class TeacherController extends Controller
         }
         return response()->json(["student"=>$students]);
     }
+    public function addNote(Request $request){
+        $user = Auth::user();
+        if($user->typeCompte !="T"){
+            return response()->json(['error'=>"You are A student you can't access teacher space"], 401);
+        }
+        $moduleId = $request->module;
+        $studentId = $request->student;
+        $type = $request->type ;
+        $value = $request->value;
+        $notes  = Note::where('module_id', $moduleId)->where('etudiant_id' , $studentId)->where('type' , $type)->get();
+        if(empty($notes)){
+            Note::create(['etudiant_id'=> $studentId
+                , 'module_id'=> $moduleId , 'type'=> $type, 'valeur'=>$value]);
+        }else{
+            Note::where('module_id', $moduleId)->where('etudiant_id' , $studentId)->where('type' , $type)->update(["valeur"=>$value]);
+        }
+        return response()->json(["success"=>200]);
+
+    }
 
 }
