@@ -18,4 +18,10 @@ Route::post('register', 'UserController@register');Route::group(['middleware' =>
     Route::get('teacher', 'TeacherController@details');
     Route::post('teacher/groupe', 'TeacherController@groupe');
     Route::post('teacher/groupe/addNote', 'TeacherController@addNote');
+
+    Route:: post('student/modules','StudentController@notes');
+
+
+
+
 });
