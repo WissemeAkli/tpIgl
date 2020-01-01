@@ -19,5 +19,5 @@ class Note extends Model
      *
      * @var string
      */
-    protected $table = 'note';
+    protected $table = 'notes_table';
 }

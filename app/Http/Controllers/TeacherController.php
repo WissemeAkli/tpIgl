@@ -48,7 +48,7 @@ class TeacherController extends Controller
             $user = User::where('idCompte' , $student->id)->where('typeCompte' , 'S')->first();
             $notes = Note::where('module_id', $moduleId)->where('etudiant_id' , $student->id)->get();
             $studentGroupe =new GroupeStudent($user->name , 0.0 , 0.0 , 0.0);
-            if(!empty($notes)) {
+            if(sizeof($notes)!=0) {
                 $CI = 0.0 ;
                 $CF = 0.0 ;
                 $CC = 0.0 ;
@@ -80,13 +80,14 @@ class TeacherController extends Controller
         $type = $request->type ;
         $value = $request->value;
         $notes  = Note::where('module_id', $moduleId)->where('etudiant_id' , $studentId)->where('type' , $type)->get();
-        if(empty($notes)){
+        if(sizeof($notes)==0){
             Note::create(['etudiant_id'=> $studentId
                 , 'module_id'=> $moduleId , 'type'=> $type, 'valeur'=>$value]);
+            return response()->json(["success"=>200 ]);
         }else{
             Note::where('module_id', $moduleId)->where('etudiant_id' , $studentId)->where('type' , $type)->update(["valeur"=>$value]);
+            return response()->json(["success"=>200 ]);
         }
-        return response()->json(["success"=>200]);
 
     }
 
