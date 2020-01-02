@@ -25,16 +25,33 @@ class TeacherController extends Controller
         $modules= [];
         foreach($teacherModules as $module){
             $groupe_id = $module->groupe_id;
-            $groupeName = Groupe::where("id", $groupe_id)->first()->name;
+            $group["id"]= $groupe_id;
+            $group["nom"]= Groupe::where("id", $groupe_id)->first()->name;
             $moduleName = $module->name;
-            if(array_key_exists( $moduleName, $modules)){
-                $modules[$moduleName][$groupe_id]= $groupeName;
+            $index = $this->containsModule($module->name , $modules);
+            if($index >=0){
+                array_push($modules[$index]['groupes'] , $group);
             }else{
-                $modules[$moduleName] = [$groupe_id => $groupeName];
+                $teacherModule["nom"]= $moduleName ;
+                $moduleGroups = [];
+                array_push($moduleGroups , $group);
+                $teacherModule["groupes"]=$moduleGroups;
+                array_push($modules , $teacherModule);
             }
         }
-        return response()->json(["succes"=>$modules, "user"=>$user]);
+        return response()->json(["modules"=>$modules, "user"=>$user]);
     }
+
+
+    private function containsModule($moduleName , $modules){
+        for ($i = 0; $i < count($modules); $i++) {
+            if($modules[$i]['nom'] == $moduleName){
+                return $i;
+            }
+        }
+        return -1;
+    }
+
     public function groupe(Request $request){
         $user = Auth::user();
         if($user->typeCompte !="T"){
@@ -70,6 +87,7 @@ class TeacherController extends Controller
         }
         return response()->json(["student"=>$students]);
     }
+
     public function addNote(Request $request){
         $user = Auth::user();
         if($user->typeCompte !="T"){
