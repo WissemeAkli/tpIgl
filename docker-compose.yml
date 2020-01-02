@@ -1,0 +1,51 @@
+version: "3"
+services:
+  app:
+    build: .
+    image: tpigl:0.1
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    networks:
+      - app-network
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    depends_on:
+      - "redis"
+
+  webserver:
+    image: nginx:alpine
+    container_name: nginx_web_server
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - "app"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+  #Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+  #Volumes
+volumes:
+  redis_data:
+    driver: local
+
+

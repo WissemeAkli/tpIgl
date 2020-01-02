@@ -6,13 +6,15 @@ namespace App;
 
 class GroupeStudent
 {
-    public  $name;
+    public  $nom;
+    public $id;
     public  $CC;
     public $CI;
     public $CF;
 
-    function __construct( $name, $CI , $CC , $CF ) {
-        $this->name = $name;
+    function __construct($id ,  $nom, $CI , $CC , $CF ) {
+        $this->id = $id;
+        $this->nom = $nom;
         $this->CC = $CC;
         $this->CF = $CF;
         $this->CI = $CI;
