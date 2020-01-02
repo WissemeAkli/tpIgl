@@ -64,7 +64,7 @@ class TeacherController extends Controller
         foreach($studentsInGroup as $student){
             $user = User::where('idCompte' , $student->id)->where('typeCompte' , 'S')->first();
             $notes = Note::where('module_id', $moduleId)->where('etudiant_id' , $student->id)->get();
-            $studentGroupe =new GroupeStudent($user->name , 0.0 , 0.0 , 0.0);
+            $studentGroupe =new GroupeStudent($student->id , $user->name , 0.0 , 0.0 , 0.0);
             if(sizeof($notes)!=0) {
                 $CI = 0.0 ;
                 $CF = 0.0 ;
@@ -83,9 +83,9 @@ class TeacherController extends Controller
                 $studentGroupe->CF = $CF;
             }
 
-            $students[$student->id] =$studentGroupe ;
+            array_push($students , $studentGroupe);
         }
-        return response()->json(["student"=>$students]);
+        return response()->json(["liste_etud"=>$students]);
     }
 
     public function addNote(Request $request){
