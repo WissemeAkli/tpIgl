@@ -15,6 +15,7 @@ class AddPropertiesToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table ->enum("typeCompte", ["A", "T", "S"])->nullable();
+           
         });
     }
 
