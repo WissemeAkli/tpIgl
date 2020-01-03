@@ -33,6 +33,7 @@ class TeacherController extends Controller
                 array_push($modules[$index]['groupes'] , $group);
             }else{
                 $teacherModule["nom"]= $moduleName ;
+                $teacherModule["id"] = $module->id;
                 $moduleGroups = [];
                 array_push($moduleGroups , $group);
                 $teacherModule["groupes"]=$moduleGroups;
