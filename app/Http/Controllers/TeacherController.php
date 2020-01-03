@@ -27,13 +27,13 @@ class TeacherController extends Controller
             $groupe_id = $module->groupe_id;
             $group["id"]= $groupe_id;
             $group["nom"]= Groupe::where("id", $groupe_id)->first()->name;
+            $group["moduleId"] = $module->id;
             $moduleName = $module->name;
             $index = $this->containsModule($module->name , $modules);
             if($index >=0){
                 array_push($modules[$index]['groupes'] , $group);
             }else{
                 $teacherModule["nom"]= $moduleName ;
-                $teacherModule["id"] = $module->id;
                 $moduleGroups = [];
                 array_push($moduleGroups , $group);
                 $teacherModule["groupes"]=$moduleGroups;
@@ -44,7 +44,7 @@ class TeacherController extends Controller
     }
 
 
-    private function containsModule($moduleName , $modules){
+    public function containsModule($moduleName , $modules){
         for ($i = 0; $i < count($modules); $i++) {
             if($modules[$i]['nom'] == $moduleName){
                 return $i;
