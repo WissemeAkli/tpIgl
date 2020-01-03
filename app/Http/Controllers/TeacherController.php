@@ -86,7 +86,7 @@ class TeacherController extends Controller
 
             array_push($students , $studentGroupe);
         }
-        return response()->json(["liste_etud"=>$students]);
+        return response()->json(["liste_etud"=>$students , "success"=>200]);
     }
 
     public function addNote(Request $request){
